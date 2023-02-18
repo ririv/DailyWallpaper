@@ -2,6 +2,7 @@
   {
     "imports": {
       "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+      "axios": "https://unpkg.com/axios/dist/axios.min.js"
     }
   }
 </script>
@@ -9,13 +10,26 @@
 <div id="app">{{ message }}</div>
 
 <script type="module">
-  import { createApp } from 'vue'
+import { createApp } from 'vue'
+import axios from 'axios'
 
-  createApp({
-    data() {
-      return {
-        message: 'Hello Vue!'
-      }
+createApp({
+  data() {
+    return {
+      message: 'Hello Vue!'
     }
-  }).mount('#app')
+  },
+
+  created(){
+    axios
+      .get('https://www.runoob.com/try/ajax/json_demo.json')
+      .then(response => (this.message = response))
+      .catch(function (error) { // 请求失败处理
+        console.log(error);
+      });
+  }
+
+}).mount('#app')
+
+
 </script>
