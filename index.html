@@ -1,28 +1,56 @@
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
 
-<div id="app">{{ message }}</div>
+<div id="app">
+  <!-- <img :src="imgUrl"> -->
+  {{imgUrl}}
+</div>
 
 <script type="module">
-const { createApp } = Vue
+  const { createApp } = Vue
 
-createApp({
-data() {
-  return {
-    message: 'Hello Vue!'
-  }
-},
+  createApp({
+    data() {
+      return {
+        message: 'Hello Vue!',
+        imgUrl: ''
+      }
+    },
 
-created() {
-  axios
-    .get('https://api.ghser.com/random/pe.php')
-    .then(response => (this.message = response))
-    .catch(function (error) { // 请求失败处理
-      console.log(error)
-    })
-}
+    methods: {
+      getImgObject() {
+        axios
+          .get('https://api.ghser.com/random/pe.php', {
+            responseType: "blob"
+          })
+          .then(response => {
+            // this.message = response;
+            this.imgUrl = URL.createObjectURL(response.data)
+            console.log(this.imgUrl)
+          })
+          .catch((error) => { // 请求失败处理
+            console.log(error)
+          })
+      },
+      getImgRawUrl() {
+        axios
+          .get('https://api.ghser.com/random/pe.php', {
+          })
+          .then(response => {
+            this.imgUrl = response.request.responseURL;
+            console.log(this.imgUrl)
+          })
+          .catch((error) => { // 请求失败处理
+            console.log(error)
+          })
+      }
+    },
 
-}).mount('#app')
+    created() {
+      this.getImgRawUrl()
+    }
+
+  }).mount('#app')
 
 
 </script>
